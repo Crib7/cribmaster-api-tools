@@ -1,0 +1,2097 @@
+{
+	"info": {
+		"_postman_id": "ffbf766f-bd68-4538-bd82-6aaa8e6d137f",
+		"name": "CMRest API Integration tests",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "AltVendor",
+			"item": [
+				{
+					"name": "AltVendor List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/altvendor/list?itemNumber=100265",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"altvendor",
+								"list"
+							],
+							"query": [
+								{
+									"key": "itemNumber",
+									"value": "100265"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Authentication",
+			"item": [
+				{
+					"name": "Authentication-Get a token",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"userid\": \"{{cm_userid}}\",\r\n  \"password\": \"{{cm_password}}\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/authentication/authenticate",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"authentication",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "End Session",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"var encodedToken = encodeURIComponent(pm.environment.get(\"apikey\"));\r",
+									"pm.environment.set(\"urlencodedapikey\",encodedToken);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/authentication/endsession?token={{urlencodedapikey}}",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"authentication",
+								"endsession"
+							],
+							"query": [
+								{
+									"key": "token",
+									"value": "{{urlencodedapikey}}"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Bins",
+			"item": [
+				{
+					"name": "Bin list with criteria",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/bins/binlist?crib=1&criteria.pageindex=2&criteria.pagesize=10",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bins",
+								"binlist"
+							],
+							"query": [
+								{
+									"key": "crib",
+									"value": "1"
+								},
+								{
+									"key": "criteria.pageindex",
+									"value": "2"
+								},
+								{
+									"key": "criteria.pagesize",
+									"value": "10"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single Bin request",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/bins/01-01-01",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bins",
+								"01-01-01"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a bin",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"autodelete\": false,\r\n  \"avgleadtime\": 0,\r\n  \"bin\": \"APITEST\",\r\n  \"bincapacity\": 3,\r\n  \"binquantity\": 1,\r\n  \"bintype\": 0,    \r\n  \"comments\": \"API Test Comment\",\r\n  \"crib\": 1,\r\n  \"cribbin\": \"{{test_bin_id}}\",\r\n  \"criticalpoint\": 0,\r\n  \"customfields\": [\r\n    {\r\n      \"name\": \"UDFAltBinDescription\",\r\n      \"value\": \"A Test API Value\"\r\n    }\r\n  ],\r\n  \"forceorder\": 0,\r\n  \"item\": null,\r\n  \"maximum\": 0,  \r\n  \"minorder\": 0,\r\n  \"overrideavgleadtime\": null,\r\n  \"overridedefaultqty\": null,\r\n  \"overrideexcessfloor\": null,\r\n  \"overrideissueprice\": null,\r\n  \"overridemaxleadtime\": null,\r\n  \"overridemonthlyusage\": null,\r\n  \"overrideorderpoint\": null,\r\n  \"overrideorderquantity\": null,\r\n  \"overridesafetystock\": null,  \r\n  \"primarycribbin\": null,  \r\n  \"stockfromcribbin\": null,  \r\n  \"stopissue\": false,\r\n  \"stopordering\": false  \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/bins/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bins",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a bin",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"autodelete\": false,\r\n  \"avgleadtime\": 0,\r\n  \"bin\": \"APITEST\",\r\n  \"bincapacity\": 3,\r\n  \"binquantity\": 1,\r\n  \"bintype\": 0,    \r\n  \"comments\": \"API Test Comment\",\r\n  \"crib\": 1,\r\n  \"cribbin\": \"{{test_bin_id}}\",\r\n  \"criticalpoint\": 0,\r\n  \"customfields\": [\r\n    {\r\n      \"name\": \"UDFAltBinDescription\",\r\n      \"value\": \"A Test API Value\"\r\n    }\r\n  ],\r\n  \"forceorder\": 0,\r\n  \"item\": \"0010\",\r\n  \"maximum\": 0,  \r\n  \"minorder\": 0,\r\n  \"overrideavgleadtime\": null,\r\n  \"overridedefaultqty\": null,\r\n  \"overrideexcessfloor\": null,\r\n  \"overrideissueprice\": null,\r\n  \"overridemaxleadtime\": null,\r\n  \"overridemonthlyusage\": null,\r\n  \"overrideorderpoint\": null,\r\n  \"overrideorderquantity\": null,\r\n  \"overridesafetystock\": null,  \r\n  \"primarycribbin\": null,  \r\n  \"stockfromcribbin\": null,  \r\n  \"stopissue\": false,\r\n  \"stopordering\": false  \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/bins/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bins",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Change Bin Quantity",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"employeeid\": \"{{cm_userid}}\",\r\n  \"cribbin\": \"{{test_bin_id}}\",\r\n  \"newquantity\": 5,\r\n  \"reasoncode\": null\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/bins/adjustquantity",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bins",
+								"adjustquantity"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a bin",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/bins/delete/01-APITEST",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"bins",
+								"delete",
+								"01-APITEST"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Checkouts",
+			"item": [
+				{
+					"name": "Get list of checkouts",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/checkouts",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"checkouts"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cribs",
+			"item": [
+				{
+					"name": "Crib List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/cribs/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cribs",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Single Crib request",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/cribs/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"cribs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Employees",
+			"item": [
+				{
+					"name": "Get list of employees",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employees/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get single employee",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employees/e-00",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"e-00"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create an employee",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{test_employee_id}}\",\r\n  \"firstname\": \"TEST\",\r\n  \"lastname\": \"EMPLOYEE\",\r\n  \"accesscode\": \"A\",\r\n  \"badgenumber\": \"TEST123\",\r\n  \"employeelocalid\": \"TESTLOCAL123\",\r\n  \"user1\": \"1\",\r\n  \"user2\": \"2\",\r\n  \"user3\": \"3\",\r\n  \"user4\": \"4\",\r\n  \"user5\": \"5\",\r\n  \"user6\": \"6\",\r\n  \"employeesiteid\": \"DEFAULT\",\r\n  \"employeeaccesslevel\": 0,\r\n  \"customfields\": [\r\n    {\r\n      \"name\": \"UDFMood\",\r\n      \"value\": \"Sleepy\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/employees/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify an employee",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"id\": \"{{test_employee_id}}\",\r\n  \"firstname\": \"TEST\",\r\n  \"lastname\": \"EMPLOYEE\",\r\n  \"accesscode\": \"A\",\r\n  \"badgenumber\": \"MOD123\",\r\n  \"employeelocalid\": \"MODLOCAL123\",\r\n  \"user1\": \"1\",\r\n  \"user2\": \"2\",\r\n  \"user3\": \"3\",\r\n  \"user4\": \"4\",\r\n  \"user5\": \"5\",\r\n  \"user6\": \"MOD6\",\r\n  \"employeesiteid\": \"DEFAULT\",\r\n  \"employeeaccesslevel\": 0,\r\n  \"customfields\": [\r\n    {\r\n      \"name\": \"UDFMood\",\r\n      \"value\": \"Sleepy\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/employees/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an Employee",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/employees/delete/APITEST",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"employees",
+								"delete",
+								"APITEST"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Items",
+			"item": [
+				{
+					"name": "Get Item List",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/items/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"items",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get single Item",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/items/0001",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"items",
+								"0001"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create an Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"itemnumber\": \"APITEST\",\r\n  \"description1\": \"API Test Item 1\",\r\n  \"description2\": \"API Test Item 1\",\r\n  \"comments\": \"API Comments\",\r\n  \"defaultqty\": 1,\r\n  \"inactiveitem\": false,\r\n  \"issueunitofmeasure\": \"UOM\",\r\n  \"itemstatuscode\": null,\r\n  \"itemtype\": 0,  \r\n  \"manufacturer\": \"Mfr Name\",\r\n  \"mfrnumber\": \"Mfr Number\",\r\n  \"price\": 1.23,\r\n  \"pricetype\": 0,\r\n  \"serialized\": null,\r\n  \"shortdesc\": \"Short Desc\",\r\n  \"upccode\": \"1234567890\",\r\n  \"vendornumber\": \"1\",\r\n  \"customfields\": [\r\n    {\r\n      \"name\": \"UDFCUSTOMFIELD1\",\r\n      \"value\": \"CustomValue\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/items/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"items",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update an Item",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"itemnumber\": \"APITEST\",\r\n  \"description1\": \"API Test Item 1\",\r\n  \"description2\": \"API Test Item 1\",\r\n  \"comments\": \"API Comments\",\r\n  \"defaultqty\": 1,\r\n  \"inactiveitem\": false,\r\n  \"issueunitofmeasure\": \"UOM\",\r\n  \"itemstatuscode\": null,\r\n  \"itemtype\": 0,  \r\n  \"manufacturer\": \"Mfr Name\",\r\n  \"mfrnumber\": \"Mfr Number\",\r\n  \"price\": 1.23,\r\n  \"pricetype\": 0,\r\n  \"serialized\": null,\r\n  \"shortdesc\": \"Short Desc\",\r\n  \"upccode\": \"1234567890\",\r\n  \"vendornumber\": \"1\",\r\n  \"customfields\": [    \r\n    {\r\n      \"name\": \"UDFCUSTOMFIELD1\",\r\n      \"value\": \"CustomValueXXX\"\r\n    }\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/items/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"items",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an Item",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/items/delete/APITEST",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"items",
+								"delete",
+								"APITEST"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Purchasing",
+			"item": [
+				{
+					"name": "Get a list of PO records",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/purchasing/purchaseorders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"purchasing",
+								"purchaseorders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a list of PendingOrder records",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/purchasing/pendingorders",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"purchasing",
+								"pendingorders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PendingOrder Types",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/purchasing/pendingordertypes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"purchasing",
+								"pendingordertypes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PO Types",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/purchasing/potypes",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"purchasing",
+								"potypes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PO Statuses",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/purchasing/postatuses",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"purchasing",
+								"postatuses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a list of PODetail records (line items) Copy 2",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/purchasing/podetails",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"purchasing",
+								"podetails"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "RFID",
+			"item": [
+				{
+					"name": "Get a list of RFID tags",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/rfid/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rfid",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a single RFID tag",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/rfid/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rfid",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create an RFID tag",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{  \r\n  \"rfid\": \"1234ABCD1234ABCD1234ABCD\",\r\n  \"employeeid\": \"E-00\",\r\n  \"itemnumber\": null,\r\n  \"serialid\": null,\r\n  \"cribbin\": null,  \r\n  \"customfields\": [\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/rfid/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rfid",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify an RFID tag",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"rfidno\": 935,\r\n    \"rfid\": \"1234ABCD1234ABCD1234ABCD\",\r\n    \"employeeid\": null,\r\n    \"itemnumber\": \"0001\",\r\n    \"serialid\": null,\r\n    \"cribbin\": null,\r\n    \"rfidstatus\": \"Unknown\",\r\n    \"customfields\": []\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/rfid/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rfid",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete an RFID tag",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/rfid/delete/935",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"rfid",
+								"delete",
+								"935"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "SerialIDs",
+			"item": [
+				{
+					"name": "Get list of SerialIDs",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/serialids/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"serialids",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a single SerialID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/serialids/100",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"serialids",
+								"100"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a SerialID",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"comments\": \"APICOMMENTS\",\r\n  \"cribbin\": null,\r\n  \"description1\": \"Serial Desc1\",\r\n  \"description2\": \"Serial Desc2\",\r\n  \"homecrib\": 1,\r\n  \"itemnumber\": \"LPR-001\",  \r\n  \"mfrnumber\": \"Mfr Number\",\r\n  \"serialid\": \"APISERIAL\",\r\n  \"serialnumber\": \"API serial #\",\r\n  \"status\": 0,\r\n  \"statusreasoncode\": null,\r\n  \"customfields\": [\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/serialids/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"serialids",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update a SerialID",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"comments\": \"APICOMMENTS\",\r\n  \"cribbin\": \"01-01\",\r\n  \"description1\": \"Serial Desc1\",\r\n  \"description2\": \"Serial Desc2\",\r\n  \"homecrib\": 1,\r\n  \"itemnumber\": \"LPR-001\",  \r\n  \"mfrnumber\": \"Mfr Number\",\r\n  \"serialid\": \"APISERIAL\",\r\n  \"serialnumber\": \"API serial #\",\r\n  \"status\": 0,\r\n  \"statusreasoncode\": null,\r\n  \"customfields\": [\r\n  ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/serialids/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"serialids",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a single SerialID Copy",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/serialids/delete/APISERIAL",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"serialids",
+								"delete",
+								"APISERIAL"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Transactions",
+			"item": [
+				{
+					"name": "List of Transactions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/transactions",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"transactions"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Filtered list of Transactions",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/transactions?criteria.searchfields=issuedto&criteria.searchvalues=e-00",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"",
+								"transactions"
+							],
+							"query": [
+								{
+									"key": "criteria.searchfields",
+									"value": "issuedto"
+								},
+								{
+									"key": "criteria.searchvalues",
+									"value": "e-00"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User1",
+			"item": [
+				{
+					"name": "Get User1 list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user1/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user1",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a single User1 record",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user1/0123",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user1",
+								"0123"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a User1 record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": null,\r\n    \"id\": \"APIUSER1\",\r\n    \"monthlyredflag\": null,\r\n    \"name\": null,\r\n    \"userinactive\": false,\r\n    \"userlocalid\": null,\r\n    \"usersiteid\": \"SITE100\",\r\n    \"weeklyredflag\": null,\r\n    \"yearlyredflag\": null,\r\n    \"customfields\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user1/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user1",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify a User1 record",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": null,\r\n    \"id\": \"APIUSER1\",\r\n    \"monthlyredflag\": null,\r\n    \"name\": null,\r\n    \"userinactive\": false,\r\n    \"userlocalid\": \"AlocalID\",\r\n    \"usersiteid\": \"SITE400\",\r\n    \"weeklyredflag\": null,\r\n    \"yearlyredflag\": null,\r\n    \"customfields\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user1/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user1",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a User1 record",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user1/delete/APIUSER1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user1",
+								"delete",
+								"APIUSER1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User2",
+			"item": [
+				{
+					"name": "Get User2 list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user2/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user2",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a single User2 record",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user2/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user2",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a User2 record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": null,\r\n    \"id\": \"APIUSER2\",\r\n    \"monthlyredflag\": null,\r\n    \"name\": null,\r\n    \"userinactive\": false,\r\n    \"userlocalid\": null,\r\n    \"usersiteid\": \"SITE100\",\r\n    \"weeklyredflag\": null,\r\n    \"yearlyredflag\": null,\r\n    \"customfields\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user2/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user2",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify a User2 record",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": null,\r\n    \"id\": \"APIUSER2\",\r\n    \"monthlyredflag\": null,\r\n    \"name\": null,\r\n    \"userinactive\": false,\r\n    \"userlocalid\": \"AlocalID\",\r\n    \"usersiteid\": \"SITE400\",\r\n    \"weeklyredflag\": null,\r\n    \"yearlyredflag\": null,\r\n    \"customfields\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user2/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user2",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a User2 record",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user2/delete/APIUSER2",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user2",
+								"delete",
+								"APIUSER2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User3",
+			"item": [
+				{
+					"name": "Get User3 list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user3/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user3",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a single User3 record",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user3/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user3",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a User3 record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": null,\r\n    \"id\": \"APIUSER3\",\r\n    \"monthlyredflag\": null,\r\n    \"name\": null,\r\n    \"userinactive\": false,\r\n    \"userlocalid\": null,\r\n    \"usersiteid\": \"SITE100\",\r\n    \"weeklyredflag\": null,\r\n    \"yearlyredflag\": null,\r\n    \"customfields\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user3/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user3",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify a User3 record",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": null,\r\n    \"id\": \"APIUSER3\",\r\n    \"monthlyredflag\": null,\r\n    \"name\": null,\r\n    \"userinactive\": false,\r\n    \"userlocalid\": \"AlocalID\",\r\n    \"usersiteid\": \"SITE400\",\r\n    \"weeklyredflag\": null,\r\n    \"yearlyredflag\": null,\r\n    \"customfields\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user3/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user3",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a User3 record",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user3/delete/APIUSER3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user3",
+								"delete",
+								"APIUSER3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User4",
+			"item": [
+				{
+					"name": "Get User4 list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user4/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user4",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a single User4 record",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user4/J3U4VAL08",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user4",
+								"J3U4VAL08"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a User4 record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": null,\r\n    \"id\": \"APIUSER4\",\r\n    \"monthlyredflag\": null,\r\n    \"name\": null,\r\n    \"userinactive\": false,\r\n    \"userlocalid\": null,\r\n    \"usersiteid\": \"SITE100\",\r\n    \"weeklyredflag\": null,\r\n    \"yearlyredflag\": null,\r\n    \"customfields\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user4/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user4",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify a User4 record",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": null,\r\n    \"id\": \"APIUSER4\",\r\n    \"monthlyredflag\": null,\r\n    \"name\": null,\r\n    \"userinactive\": false,\r\n    \"userlocalid\": \"AlocalID\",\r\n    \"usersiteid\": \"SITE400\",\r\n    \"weeklyredflag\": null,\r\n    \"yearlyredflag\": null,\r\n    \"customfields\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user4/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user4",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a User4 record",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user4/delete/APIUSER4",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user4",
+								"delete",
+								"APIUSER4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User5",
+			"item": [
+				{
+					"name": "Get User5 list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user5/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user5",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a single User5 record",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user5/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user5",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a User5 record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": null,\r\n    \"id\": \"APIUSER5\",\r\n    \"monthlyredflag\": null,\r\n    \"name\": null,\r\n    \"userinactive\": false,\r\n    \"userlocalid\": null,\r\n    \"usersiteid\": \"SITE100\",\r\n    \"weeklyredflag\": null,\r\n    \"yearlyredflag\": null,\r\n    \"customfields\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user5/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user5",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify a User5 record",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": null,\r\n    \"id\": \"APIUSER5\",\r\n    \"monthlyredflag\": null,\r\n    \"name\": null,\r\n    \"userinactive\": false,\r\n    \"userlocalid\": \"AlocalID\",\r\n    \"usersiteid\": \"SITE400\",\r\n    \"weeklyredflag\": null,\r\n    \"yearlyredflag\": null,\r\n    \"customfields\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user5/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user5",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a User5 record",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user5/delete/APIUSER5",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user5",
+								"delete",
+								"APIUSER5"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User6",
+			"item": [
+				{
+					"name": "Get User6 list",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user6/list",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user6",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get a single User6 record",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user6/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user6",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Create a User6 record",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": null,\r\n    \"id\": \"APIUSER6\",\r\n    \"monthlyredflag\": null,\r\n    \"name\": null,\r\n    \"userinactive\": false,\r\n    \"userlocalid\": null,\r\n    \"usersiteid\": \"SITE100\",\r\n    \"weeklyredflag\": null,\r\n    \"yearlyredflag\": null,\r\n    \"customfields\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user6/create",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user6",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Modify a User6 record",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"comments\": null,\r\n    \"id\": \"APIUSER6\",\r\n    \"monthlyredflag\": null,\r\n    \"name\": null,\r\n    \"userinactive\": false,\r\n    \"userlocalid\": \"AlocalID\",\r\n    \"usersiteid\": \"SITE400\",\r\n    \"weeklyredflag\": null,\r\n    \"yearlyredflag\": null,\r\n    \"customfields\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/user6/update",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user6",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete a User6 record",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "token",
+								"value": "{{apikey}}",
+								"type": "default"
+							}
+						],
+						"url": {
+							"raw": "{{base_url}}/user6/delete/APIUSER6",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"user6",
+								"delete",
+								"APIUSER6"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"auth": {
+		"type": "apikey"
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					"pm.sendRequest(\"https://postman-echo.com/get\", function (err, response) {",
+					"    console.log(response.json());",
+					"});"
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "apikey",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "base_url",
+			"value": "http://localhost/CMRestAPI/api/integration",
+			"type": "default"
+		},
+		{
+			"key": "cm_userid",
+			"value": "e-00",
+			"type": "default"
+		},
+		{
+			"key": "cm_password",
+			"value": "1234",
+			"type": "default"
+		},
+		{
+			"key": "test_bin_id",
+			"value": "01-APITEST",
+			"type": "default"
+		},
+		{
+			"key": "test_employee_id",
+			"value": "APITEST",
+			"type": "default"
+		},
+		{
+			"key": "urlencodedapikey",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
